@@ -1,7 +1,7 @@
 // script.js (Versione 5.4 - Finale e Corretta)
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
-    const API_BASE_URL = '';
+    const API_BASE_URL = '/api';
     let philosophyOptions = {};
 
     // RENDER PRINCIPALI
