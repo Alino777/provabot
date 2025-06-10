@@ -75,24 +75,24 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 nanabot = DigitalAssistant()
 
-@app.route('/api/status', methods=['GET'])
+@app.route('/status', methods=['GET'])
 def status(): return jsonify(nanabot.get_status())
 
-@app.route('/api/philosophy_options', methods=['GET'])
+@app.route('/philosophy_options', methods=['GET'])
 def philosophy_options(): return jsonify(PHILOSOPHY_OPTIONS)
 
-@app.route('/api/complete_mission/<int:mission_number>', methods=['POST'])
+@app.route('/complete_mission/<int:mission_number>', methods=['POST'])
 def handle_mission_completion(mission_number):
     message = nanabot.complete_mission(mission_number, request.get_json())
     return jsonify({'success': True, 'message': message}) if message else (jsonify({'success': False, 'message': 'Missione già completata o dati non validi'}), 400)
 
-@app.route('/api/select_philosophy', methods=['POST'])
+@app.route('/select_philosophy', methods=['POST'])
 def handle_philosophy_selection():
     data = request.get_json()
     message = nanabot.set_philosophy(data.get('theme'), data.get('choice'))
     return jsonify({'success': True, 'message': message, 'final_mission_complete': bool(message)})
 
-@app.route('/api/reset', methods=['POST'])
+@app.route('/reset', methods=['POST'])
 def reset():
     global nanabot; nanabot = DigitalAssistant()
     return jsonify({'success': True, 'message': 'Addestramento resettato!'})
