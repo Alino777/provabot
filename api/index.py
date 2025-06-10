@@ -1,5 +1,3 @@
-# app.py (Versione 5.1 - Corretta)
-
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -35,7 +33,6 @@ THEMES = list(PHILOSOPHY_OPTIONS.keys())
 class DigitalAssistant:
     def __init__(self, name="Nanabot"):
         self.name = name; self.level = 1; self.training_progress = 0; self.unlocked_badges = []; self.philosophy = {}
-        # AGGIORNATO: Aggiunti più controlli di coerenza per rendere la Missione 2 più completa
         self.config = { 
             "sources": [], 
             "security": {
@@ -54,7 +51,7 @@ class DigitalAssistant:
     def complete_mission(self, mission_number, data):
         if mission_number == 1 and "🏅 Guardiano della Scienza" not in self.unlocked_badges:
             self.training_progress += 25; self.add_badge("🏅 Guardiano della Scienza"); self.config["sources"] = data.get("sources", [])
-            return "Perfetto! D'ora in poi Nanabot si baserà solo sui dati scientifici che hai approvato, e non sui consigli letti sui social dal cugino del tuo paziente."
+            return "Perfetto! D'ora in poi Nanabot si baserà solo sui dati scientifici che hai approvato."
         elif mission_number == 2 and "🛡️ Sentinella della Salute" not in self.unlocked_badges:
             self.training_progress += 25; self.add_badge("🛡️ Sentinella della Salute"); self.config["security"] = data
             return "Ottimo! Le antenne di Nanabot ora sono sintonizzate per intercettare le informazioni critiche."
@@ -78,9 +75,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 nanabot = DigitalAssistant()
 
-@app.route('/api/status')
+@app.route('/api/status', methods=['GET'])
 def status(): return jsonify(nanabot.get_status())
-@app.route('/api/philosophy_options')
+
+@app.route('/api/philosophy_options', methods=['GET'])
 def philosophy_options(): return jsonify(PHILOSOPHY_OPTIONS)
 
 @app.route('/api/complete_mission/<int:mission_number>', methods=['POST'])
@@ -98,6 +96,3 @@ def handle_philosophy_selection():
 def reset():
     global nanabot; nanabot = DigitalAssistant()
     return jsonify({'success': True, 'message': 'Addestramento resettato!'})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)

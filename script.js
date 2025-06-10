@@ -1,22 +1,19 @@
 // script.js (Versione 5.4 - Finale e Corretta)
-
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
     const API_BASE_URL = '';
     let philosophyOptions = {};
 
-    // -------------------------------------------------------------------
-    // FUNZIONI DI RENDER PRINCIPALI
-    // -------------------------------------------------------------------
+    // RENDER PRINCIPALI
     function renderApp(status) {
         app.innerHTML = `
             <header><img src="https://i.imgur.com/zYf2oMh.png" alt="Nanabot Logo" class="avatar"><h1>Addestramento di <span id="bot-name">${status.name}</span></h1></header>
             <div class="progress-card">
                 <div class="progress-bar-container"><div id="progress-bar" class="progress-bar" style="width: ${status.progress}%"></div></div>
-                <p id="progress-label">Progresso Addestramento: ${status.progress}%</p>
-            </div>
-            <div id="mission-area"></div>
-            <div class="badges-area"><h3>🏆 Badge Sbloccati</h3><ul id="badge-list">${status.badges.length ? status.badges.map(b => `<li>${b}</li>`).join('') : '<li>Nessun badge ancora.</li>'}</ul></div>`;
+                <p id="progress-label">Progresso Addestramento: <span class="math-inline">\{status\.progress\}%</p\>
+</div\>
+<div id\="mission\-area"\></div\>
+<div class\="badges\-area"\><h3\>🏆 Badge Sbloccati</h3\><ul id\="badge\-list"\></span>{status.badges.length ? status.badges.map(b => `<li>${b}</li>`).join('') : '<li>Nessun badge ancora.</li>'}</ul></div>`;
     }
     
     function renderCurrentMission(status) {
@@ -50,25 +47,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('next-mission-btn').addEventListener('click', fetchStatus);
     }
 
-    // -------------------------------------------------------------------
     // RENDER DELLE MISSIONI
-    // -------------------------------------------------------------------
     function renderIntroScreen(container, status) {
         container.innerHTML = `<div class="mission-card intro-card"><h2>Benvenuto, Master Trainer!</h2><p>Stai per iniziare l'addestramento di <strong>Nanabot</strong>. Attraverso 4 missioni, gli insegnerai a pensare e rispondere con il tuo stile unico.</p><button id="start-btn">Inizia l'Addestramento</button></div>`;
         document.getElementById('start-btn').addEventListener('click', () => renderMission1_Explanation(container, status));
     }
 
-    // --- Missione 1: Biblioteca della Verità ---
     function renderMission1_Explanation(container, status) {
         container.innerHTML = `<div class="mission-card"><h2>Missione 1: La Biblioteca della Verità</h2><p>I tuoi pazienti, tra una visita e l'altra, potrebbero fare a Nanabot domande generali di nutrizione, come 'A cosa servono le fibre?' o 'Qual è la differenza tra grassi saturi e insaturi?'.<br><br>Per evitare che Nanabot dia risposte generiche prese da internet o, peggio, consigli errati, dobbiamo costruire insieme la sua 'biblioteca' di base.</p><button id="start-mission-btn">Ho Capito, Inizia</button></div>`;
         document.getElementById('start-mission-btn').addEventListener('click', () => renderMission1_Action(container, status));
     }
     function renderMission1_Action(container, status) {
         const SOURCES = ["Linee Guida CREA", "Istituto Superiore di Sanità (ISS)", "World Health Organization (WHO)", "EFSA"];
-        const sourcesHtml = SOURCES.map((s, i) => `<li class="check-item"><input type="checkbox" id="source-${i}" value="${s}" name="source"><label for="source-${i}">${s}</label></li>`).join('');
+        const sourcesHtml = SOURCES.map((s, i) => `<li class="check-item"><input type="checkbox" id="source-<span class="math-inline">\{i\}" value\="</span>{s}" name="source"><label for="source-<span class="math-inline">\{i\}"\></span>{s}</label></li>`).join('');
         const exclusiveOptionHtml = `<li class="check-item"><input type="checkbox" id="source-none" name="source_exclusive"><label for="source-none" class="exclusive-option">Nessuna, Nanabot si deve basare solo sui miei contenuti</label></li>`;
         
-        container.innerHTML = `<div class="mission-card"><h2>Missione 1: La Biblioteca della Verità</h2><p><strong>Seleziona le fonti che ritieni affidabili e che vuoi includere nella base di conoscenza di Nanabot:</strong></p><ul class="item-list">${sourcesHtml}<hr>${exclusiveOptionHtml}</ul><button id="confirm-btn" disabled>Conferma Fonti</button></div>`;
+        container.innerHTML = `<div class="mission-card"><h2>Missione 1: La Biblioteca della Verità</h2><p><strong>Seleziona le fonti che ritieni affidabili e che vuoi includere nella base di conoscenza di Nanabot:</strong></p><ul class="item-list"><span class="math-inline">\{sourcesHtml\}<hr\></span>{exclusiveOptionHtml}</ul><button id="confirm-btn" disabled>Conferma Fonti</button></div>`;
         
         const btn = document.getElementById('confirm-btn');
         const standardCheckboxes = container.querySelectorAll('input[name="source"]');
@@ -96,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Missione 2: Protocollo di Sicurezza ---
     function renderMission2_Explanation(container, status) {
         container.innerHTML = `<div class="mission-card"><h2>Missione 2: Il Protocollo di Sicurezza</h2><p>La sicurezza del paziente è la priorità assoluta. In questa missione, non insegniamo a Nanabot cosa rispondere, ma <b>quando è il momento di fare un passo indietro e chiamare te</b>.<br><br>Trasformeremo Nanabot in una sentinella intelligente che vigila sulle conversazioni, pronta a segnalarti subito le situazioni che richiedono la tua esperienza.<br><br>Lo faremo in due passaggi:<br>1. <b>Parole Chiave di Allerta</b>: Per intercettare termini delicati.<br>2. <b>Controlli di Coerenza</b>: Per evitare consigli contraddittori.</p><button id="start-mission-btn">Ho Capito, Configura i Trigger</button></div>`;
         document.getElementById('start-mission-btn').addEventListener('click', () => renderMission2_Keywords(container, status));
@@ -112,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dropdown = document.getElementById('selector-dropdown');
 
         const renderSelected = () => {
-            const tagsHtml = [...selectedKeywords].map(kw => `<span class="tag">${kw}<span class="close" data-kw="${kw}">&times;</span></span>`).join('');
+            const tagsHtml = [...selectedKeywords].map(kw => `<span class="tag"><span class="math-inline">\{kw\}<span class\="close" data\-kw\="</span>{kw}">&times;</span></span>`).join('');
             const inputHtml = `<input type="text" id="keyword-search-input" placeholder="${selectedKeywords.size > 0 ? '' : 'Cerca, seleziona o digita una nuova parola e premi Invio'}">`;
             inputArea.innerHTML = tagsHtml + inputHtml;
             document.getElementById('keyword-search-input').focus();
@@ -125,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const filteredWords = words.filter(w => !selectedKeywords.has(w) && w.toLowerCase().includes(filter.toLowerCase()));
                 if (filteredWords.length > 0) {
                     hasResults = true; itemsHtml += `<div class="dropdown-category">${category}</div>`;
-                    itemsHtml += filteredWords.map(w => `<div class="dropdown-item" data-kw="${w}">${w}</div>`).join('');
+                    itemsHtml += filteredWords.map(w => `<div class="dropdown-item" data-kw="<span class="math-inline">\{w\}"\></span>{w}</div>`).join('');
                 }
             }
             dropdown.innerHTML = hasResults ? itemsHtml : '<div class="dropdown-item no-results">Nessun risultato</div>';
@@ -160,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderMission2_Coherence(container, status, keywordsFromStep1) {
         const coherenceChecks = status.config.security.coherence_checks;
-        const coherenceHtml = Object.entries(coherenceChecks).map(([key, value]) => `<div class="toggle-item"><label for="check-${key}">${key}</label><label class="toggle-switch"><input type="checkbox" id="check-${key}" data-key="${key}" ${value ? 'checked' : ''}><span class="slider"></span></label></div>`).join('');
+        const coherenceHtml = Object.entries(coherenceChecks).map(([key, value]) => `<div class="toggle-item"><label for="check-<span class="math-inline">\{key\}"\></span>{key}</label><label class="toggle-switch"><input type="checkbox" id="check-<span class="math-inline">\{key\}" data\-key\="</span>{key}" ${value ? 'checked' : ''}><span class="slider"></span></label></div>`).join('');
         container.innerHTML = `<div class="mission-card"><h2>Missione 2: Il Protocollo di Sicurezza</h2><h4 class="step-title">Passo 2 di 2: Attiva i Controlli di Coerenza</h4><p>Questa è una rete di sicurezza aggiuntiva per impedire a Nanabot di dare consigli contraddittori.<br><b>Esempio:</b> se attivi "Celiachia", Nanabot non suggerirà <b>mai</b> una ricetta con glutine a un paziente celiaco, ma chiederà il tuo intervento.<br><br><i>Attiva i controlli che ritieni fondamentali.</i></p><div class="coherence-grid">${coherenceHtml}</div><button id="confirm-btn">Salva Protocollo e Procedi</button></div>`;
         document.getElementById('confirm-btn').addEventListener('click', async (e) => {
             e.target.disabled = true;
@@ -170,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Missione 3: Motore Proattivo ---
     function renderMission3_Explanation(container, status) {
         container.innerHTML = `<div class="mission-card"><h2>Missione 3: Il Motore Proattivo</h2><p>Nanabot può darti un aiuto ancora più concreto se gli permetti di accedere ad alcune delle tue risorse. Qui puoi decidere con precisione quali fonti di conoscenza potrà usare.</p><button id="start-mission-btn">Ho Capito, Imposta i Permessi</button></div>`;
         document.getElementById('start-mission-btn').addEventListener('click', () => renderMission3_Action(container, status));
@@ -186,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // --- Missione 4: Spiegazione ---
     function renderMission4_Explanation(container, status) {
         container.innerHTML = `
             <div class="mission-card">
@@ -202,20 +193,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('start-mission-4-btn').addEventListener('click', () => {
             const firstTheme = status.themes_todo[0];
-            // --- QUESTA È LA RIGA CORRETTA ---
-            // Passiamo 'status' alla funzione successiva, risolvendo il bug.
             if (firstTheme) renderPhilosophyMission(container, firstTheme, status);
         });
     }
 
-    // --- Missione 4: Azione ---
     function renderPhilosophyMission(container, theme, status) {
         if (!philosophyOptions || !philosophyOptions[theme]) return;
 
         let optionsHtml = Object.entries(philosophyOptions[theme]).map(([key, text]) => {
             const title = text.match(/\[(.*?)\]/)[1]; 
             const description = text.split('] ')[1];
-            return `<div class="philosophy-card" data-choice="${key}"><h5>Approccio ${key}: ${title}</h5><p>${description}</p></div>`;
+            return `<div class="philosophy-card" data-choice="${key}"><h5>Approccio ${key}: <span class="math-inline">\{title\}</h5\><p\></span>{description}</p></div>`;
         }).join('');
         
         const themeIndex = Object.keys(status.philosophy).length + 1;
@@ -224,9 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = `
             <div class="mission-card">
                 <h2>Missione 4: L'Albero della Filosofia</h2>
-                <p><strong class="step-title">Tema ${themeIndex}/${totalThemes}: ${theme}</strong></p>
-                <p>Scegli l'approccio che più ti rappresenta. Nanabot lo userà per comunicare con i tuoi pazienti con la tua stessa voce.</p>
-                <div class="options-grid">${optionsHtml}</div>
+                <p><strong class="step-title">Tema <span class="math-inline">\{themeIndex\}/</span>{totalThemes}: <span class="math-inline">\{theme\}</strong\></p\>
+<p\>Scegli l'approccio che più ti rappresenta\. Nanabot lo userà per comunicare con i tuoi pazienti con la tua stessa voce\.</p\>
+<div class\="options\-grid"\></span>{optionsHtml}</div>
             </div>`;
             
         container.querySelectorAll('.philosophy-card').forEach(card => card.addEventListener('click', async (e) => {
@@ -237,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     }
 
-    // --- Schermata Finale ---
     function renderCompletionScreen(container, status) {
         container.innerHTML = `
             <div class="mission-card completion-card">
@@ -255,12 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // -------------------------------------------------------------------
     // FUNZIONI DI COMUNICAZIONE
-    // -------------------------------------------------------------------
     async function completeMission(missionNumber, data) {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/complete_mission/${missionNumber}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/complete\_mission/</span>{missionNumber}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message || 'Errore di rete');
     
@@ -299,6 +284,110 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // AVVIO APPLICAZIONE
+    // AVVIO
     fetchStatus();
 });
+}
+{
+type: uploaded file
+fileName: api/index.py
+fullContent:
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
+# --- DATI E CLASSE ---
+PHILOSOPHY_OPTIONS = {
+    "Gestione dello Sgarro": {
+        "A": "[METODICO SCIENTIFICO] Lo 'sgarro' è un dato. Analizziamolo per compensare il bilancio calorico settimanale senza impatti.",
+        "B": "[COACH MOTIVAZIONALE] Non è uno sgarro, ma un'esperienza. Nessun senso di colpa! Domani è un nuovo giorno per ripartire con energia.",
+        "C": "[OLISTICO INTEGRATO] Ascolta come reagisce il tuo corpo. Probabilmente era un cibo pro-infiammatorio. Torniamo subito a nutrire l'organismo.",
+        "D": "[BUONGUSTAIO FLESSIBILE] Perfetto, spero te lo sia goduto! La vita è fatta di questi piaceri. Dal prossimo pasto si torna al piano, con serenità."
+    },
+    "Motivazione": {
+        "A": "[METODICO SCIENTIFICO] La motivazione si basa sui dati. Guarda i grafici: la tua composizione corporea sta migliorando. I numeri non mentono.",
+        "B": "[COACH MOTIVAZIONALE] Ricorda il 'perché' hai iniziato! Celebriamo ogni piccola vittoria, come aver bevuto più acqua o aver resistito a una tentazione.",
+        "C": "[OLISTICO INTEGRATO] Senti la nuova energia che hai? Come dormi meglio? La vera motivazione viene dal tuo benessere interiore, non solo dallo specchio.",
+        "D": "[BUONGUSTAIO FLESSIBILE] Non devi essere perfetto, devi essere costante. Pensa a questo percorso come a un'abitudine piacevole, non a un sacrificio."
+    },
+    "Vita Sociale": {
+        "A": "[METODICO SCIENTIFICO] Prima di una cena fuori, pianifica. Controlla il menù online e pre-calcola le scelte migliori per non deviare dai tuoi target.",
+        "B": "[COACH MOTIVAZIONALE] La socialità è una sfida che puoi vincere. Fissa un obiettivo: un solo bicchiere di vino e scegli l'opzione più sana che ti ispira. Puoi farcela!",
+        "C": "[OLISTICO INTEGRATO] La convivialità nutre lo spirito. Scegli luoghi che offrono cibi freschi e reali. Concentrati sulla compagnia e mangia lentamente.",
+        "D": "[BUONGUSTAIO FLESSIBILE] Vai e divertiti! La regola dell'80/20 esiste per questo. Scegli quello che ti va, ma con un occhio di riguardo, e vivi il momento."
+    },
+    "Integrazione": {
+        "A": "[METODICO SCIENTIFICO] Gli integratori sono strumenti di precisione. Usali solo a seguito di analisi che dimostrino una reale carenza e a dosaggi specifici.",
+        "B": "[COACH MOTIVAZIONALE] Considera gli integratori un piccolo aiuto per supportare i tuoi grandi sforzi! Non sono una magia, ma un modo per dare al corpo quel 5% in più.",
+        "C": "[OLISTICO INTEGRATO] Prima cerca i nutrienti dal cibo 'vero'. Se serve, scegli integratori naturali, biodisponibili e di altissima qualità.",
+        "D": "[BUONGUSTAIO FLESSIBILE] Mangia bene e non avrai bisogno di pillole. Un'alimentazione varia è l'integratore migliore e più piacevole che esista."
+    }
+}
+THEMES = list(PHILOSOPHY_OPTIONS.keys())
+
+class DigitalAssistant:
+    def __init__(self, name="Nanabot"):
+        self.name = name; self.level = 1; self.training_progress = 0; self.unlocked_badges = []; self.philosophy = {}
+        self.config = { 
+            "sources": [], 
+            "security": {
+                "keywords": ["diabete", "gravidanza", "farmaco", "dolore"], 
+                "coherence_checks": {
+                    "Celiachia (Senza Glutine)": True, 
+                    "Dieta Vegana": True,
+                    "Dieta Vegetariana": True,
+                    "Intolleranza al Lattosio": True,
+                    "Allergie Note": False,
+                    "Favismo": False
+                }
+            }, 
+            "resources": {"patient_plans": True, "my_content": True, "external_content": False} 
+        }
+    def complete_mission(self, mission_number, data):
+        if mission_number == 1 and "🏅 Guardiano della Scienza" not in self.unlocked_badges:
+            self.training_progress += 25; self.add_badge("🏅 Guardiano della Scienza"); self.config["sources"] = data.get("sources", [])
+            return "Perfetto! D'ora in poi Nanabot si baserà solo sui dati scientifici che hai approvato."
+        elif mission_number == 2 and "🛡️ Sentinella della Salute" not in self.unlocked_badges:
+            self.training_progress += 25; self.add_badge("🛡️ Sentinella della Salute"); self.config["security"] = data
+            return "Ottimo! Le antenne di Nanabot ora sono sintonizzate per intercettare le informazioni critiche."
+        elif mission_number == 3 and "🚀 Motore Proattivo" not in self.unlocked_badges:
+            self.training_progress += 25; self.add_badge("🚀 Motore Proattivo"); self.config["resources"] = data
+            return "Fantastico! Hai dato a Nanabot le chiavi della tua 'dispensa di sapienza'."
+        return None
+    def set_philosophy(self, theme, choice_key):
+        if len(self.philosophy) < len(THEMES): self.philosophy[theme] = PHILOSOPHY_OPTIONS[theme][choice_key]
+        if len(self.philosophy) == len(THEMES) and "🏆 Master Trainer" not in self.unlocked_badges:
+            self.training_progress = 100; self.add_badge("🏆 Master Trainer")
+            return "Congratulazioni, Master Trainer! La personalità di Nanabot è forgiata a tua immagine e somiglianza."
+        return None
+    def add_badge(self, badge: str):
+        if badge not in self.unlocked_badges: self.unlocked_badges.append(badge)
+    def get_status(self):
+        return {'name': self.name, 'progress': self.training_progress, 'badges': self.unlocked_badges, 'philosophy': self.philosophy, 'config': self.config, 'themes_todo': [t for t in THEMES if t not in self.philosophy]}
+
+# --- FLASK APP ---
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+nanabot = DigitalAssistant()
+
+@app.route('/api/status', methods=['GET'])
+def status(): return jsonify(nanabot.get_status())
+
+@app.route('/api/philosophy_options', methods=['GET'])
+def philosophy_options(): return jsonify(PHILOSOPHY_OPTIONS)
+
+@app.route('/api/complete_mission/<int:mission_number>', methods=['POST'])
+def handle_mission_completion(mission_number):
+    message = nanabot.complete_mission(mission_number, request.get_json())
+    return jsonify({'success': True, 'message': message}) if message else (jsonify({'success': False, 'message': 'Missione già completata o dati non validi'}), 400)
+
+@app.route('/api/select_philosophy', methods=['POST'])
+def handle_philosophy_selection():
+    data = request.get_json()
+    message = nanabot.set_philosophy(data.get('theme'), data.get('choice'))
+    return jsonify({'success': True, 'message': message, 'final_mission_complete': bool(message)})
+
+@app.route('/api/reset', methods=['POST'])
+def reset():
+    global nanabot; nanabot = DigitalAssistant()
+    return jsonify({'success': True, 'message': 'Addestramento resettato!'})
+}
