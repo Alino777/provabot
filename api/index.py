@@ -1,7 +1,9 @@
+# api/index.py (Versione Corretta e Finale)
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-# --- DATI E CLASSE ---
+# --- DATI E CLASSE (Nessuna modifica qui) ---
 PHILOSOPHY_OPTIONS = {
     "Gestione dello Sgarro": {
         "A": "[METODICO SCIENTIFICO] Lo 'sgarro' è un dato. Analizziamolo per compensare il bilancio calorico settimanale senza impatti.",
@@ -75,24 +77,27 @@ app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 nanabot = DigitalAssistant()
 
-@app.route('/status', methods=['GET'])
+# --- MODIFICHE QUI ---
+# Ho aggiunto il prefisso /api/ a tutte le rotte
+
+@app.route('/api/status', methods=['GET'])
 def status(): return jsonify(nanabot.get_status())
 
-@app.route('/philosophy_options', methods=['GET'])
+@app.route('/api/philosophy_options', methods=['GET'])
 def philosophy_options(): return jsonify(PHILOSOPHY_OPTIONS)
 
-@app.route('/complete_mission/<int:mission_number>', methods=['POST'])
+@app.route('/api/complete_mission/<int:mission_number>', methods=['POST'])
 def handle_mission_completion(mission_number):
     message = nanabot.complete_mission(mission_number, request.get_json())
     return jsonify({'success': True, 'message': message}) if message else (jsonify({'success': False, 'message': 'Missione già completata o dati non validi'}), 400)
 
-@app.route('/select_philosophy', methods=['POST'])
+@app.route('/api/select_philosophy', methods=['POST'])
 def handle_philosophy_selection():
     data = request.get_json()
     message = nanabot.set_philosophy(data.get('theme'), data.get('choice'))
     return jsonify({'success': True, 'message': message, 'final_mission_complete': bool(message)})
 
-@app.route('/reset', methods=['POST'])
+@app.route('/api/reset', methods=['POST'])
 def reset():
     global nanabot; nanabot = DigitalAssistant()
     return jsonify({'success': True, 'message': 'Addestramento resettato!'})
