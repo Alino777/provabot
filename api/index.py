@@ -3,6 +3,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
+
+
 # --- DATI E CLASSE (Nessuna modifica qui) ---
 PHILOSOPHY_OPTIONS = {
     "Gestione dello Sgarro": {
@@ -80,8 +84,13 @@ nanabot = DigitalAssistant()
 # --- MODIFICHE QUI ---
 # Ho aggiunto il prefisso /api/ a tutte le rotte
 
+@app.route('/')
+def home():
+    return jsonify({"status": "API is running"})
+
 @app.route('/api/status', methods=['GET'])
-def status(): return jsonify(nanabot.get_status())
+def status(): 
+    return jsonify(nanabot.get_status())
 
 @app.route('/api/philosophy_options', methods=['GET'])
 def philosophy_options(): return jsonify(PHILOSOPHY_OPTIONS)
@@ -101,3 +110,5 @@ def handle_philosophy_selection():
 def reset():
     global nanabot; nanabot = DigitalAssistant()
     return jsonify({'success': True, 'message': 'Addestramento resettato!'})
+if __name__ == '__main__':
+    app.run(debug=True)
